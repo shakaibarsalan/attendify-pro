@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS organization_requests (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  organization_name VARCHAR(255) NOT NULL,
+  organization_code VARCHAR(50),
+  contact_name VARCHAR(255) NOT NULL,
+  contact_email VARCHAR(255) NOT NULL,
+  contact_phone VARCHAR(50),
+  institution_domain VARCHAR(255),
+  address TEXT,
+  city VARCHAR(100),
+  country VARCHAR(100) DEFAULT 'Pakistan',
+  expected_students INTEGER,
+  expected_teachers INTEGER,
+  message TEXT,
+  status VARCHAR(20) DEFAULT 'pending',
+  reviewed_by UUID REFERENCES users(id),
+  reviewed_at TIMESTAMP WITH TIME ZONE,
+  admin_notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);

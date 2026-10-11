@@ -1,0 +1,214 @@
+.timelineSection {
+  padding: var(--section-py) 0;
+  background: var(--bg);
+  position: relative;
+}
+
+.sectionLead {
+  text-align: center;
+  margin-bottom: clamp(48px, 6vw, 80px);
+}
+
+.sectionLabel {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--brand-600);
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+}
+
+.sectionTitle {
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-weight: 800;
+  color: var(--slate-900);
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.sectionSubtitle {
+  font-size: 1.05rem;
+  color: var(--slate-500);
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+.timelineTrack {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  gap: 0;
+}
+
+.connectorLine {
+  position: absolute;
+  top: 32px;
+  left: 12.5%;
+  right: 12.5%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--brand-200), var(--brand-400), var(--brand-200));
+  z-index: 0;
+}
+
+.connectorLine::before,
+.connectorLine::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-300);
+}
+
+.connectorLine::before {
+  left: 0;
+}
+
+.connectorLine::after {
+  right: 0;
+}
+
+.stepNode {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  padding: 0 12px;
+}
+
+.stepCircle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand-600), var(--brand-500));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+  margin-bottom: 20px;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.stepNode:hover .stepCircle {
+  transform: scale(1.08);
+}
+
+.stepNumber {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: white;
+  font-family: var(--font-mono);
+}
+
+.stepIconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: var(--brand-50);
+  border: 1px solid var(--brand-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand-600);
+  margin-bottom: 16px;
+  transition: all 0.25s ease;
+}
+
+.stepNode:hover .stepIconWrap {
+  background: var(--brand-100);
+  border-color: var(--brand-200);
+}
+
+.stepTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--slate-800);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.stepDesc {
+  font-size: 0.88rem;
+  color: var(--slate-500);
+  line-height: 1.6;
+  max-width: 200px;
+}
+
+.connectorDot {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .timelineTrack {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .connectorLine {
+    top: 0;
+    bottom: 0;
+    left: 31px;
+    right: auto;
+    width: 2px;
+    height: auto;
+    background: linear-gradient(180deg, var(--brand-200), var(--brand-400), var(--brand-200));
+  }
+
+  .connectorLine::before,
+  .connectorLine::after {
+    left: -3px;
+    top: auto;
+  }
+
+  .connectorLine::before {
+    top: 0;
+  }
+
+  .connectorLine::after {
+    bottom: 0;
+  }
+
+  .stepNode {
+    flex-direction: row;
+    text-align: left;
+    padding: 24px 0;
+    gap: 20px;
+  }
+
+  .stepIconWrap {
+    order: -1;
+    margin-bottom: 0;
+  }
+
+  .stepDesc {
+    max-width: none;
+  }
+
+  .stepCircle {
+    margin-bottom: 0;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+
+  .stepNumber {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .stepNode {
+    padding: 16px 0;
+    gap: 14px;
+  }
+}

@@ -1,0 +1,53 @@
+/* Robot greeting: floats up beside the button, holds (Lottie plays), drifts back. */
+
+.wrap {
+  display: block;
+  will-change: transform, opacity;
+  opacity: 0;
+  /* The Lottie canvas has empty space below the robot; pull it down so the
+     robot sits right above the button instead of floating with a big gap. */
+  margin-bottom: -30px;
+}
+
+.btn {
+  display: block;
+  width: 168px;
+  max-width: 42vw;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.lottie { width: 100%; height: auto; display: block; }
+
+/* ── Phases ──────────────────────────────────────────────────────────────── */
+.wrap[data-phase='rising']  { animation: rgRise 0.7s cubic-bezier(0.34, 1.45, 0.5, 1) both; }
+.wrap[data-phase='idle']    { opacity: 1; animation: rgFloat 5.5s ease-in-out infinite; }
+.wrap[data-phase='leaving'] { animation: rgLeave 0.72s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.wrap[data-phase='gap']     { opacity: 0; transform: translateY(22px); }
+
+@keyframes rgRise {
+  0%   { opacity: 0; transform: translateY(26px) scale(0.82); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes rgLeave {
+  0%   { opacity: 1; transform: translateY(0); }
+  45%  { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(22px) scale(0.9); }
+}
+@keyframes rgFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+
+@media (max-width: 480px) {
+  .btn { width: 130px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap { animation: none !important; opacity: 0; transition: opacity 0.45s ease; }
+  .wrap[data-phase='idle'] { opacity: 1; }
+  .wrap[data-phase='leaving'] { opacity: 0; }
+}

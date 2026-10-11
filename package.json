@@ -1,0 +1,30 @@
+{
+  "name": "attendify",
+  "version": "2.0.0",
+  "private": true,
+  "description": "AI-powered attendance management system with face recognition and anti-spoofing",
+  "workspaces": [
+    "server",
+    "apps/web",
+    "apps/landing"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,web \"npm run dev -w server\" \"npm run dev -w attendify-web\"",
+    "build": "npm run build -w server && npm run build -w attendify-web && npm run build -w attendify-landing",
+    "test": "npm run test -w server",
+    "test:ai": "cd ai-service && python -m pytest tests/ -v",
+    "lint": "npm run lint -w server && npm run lint -w attendify-web",
+    "e2e": "cd e2e && npx playwright test",
+    "db:up": "docker compose up -d db-main db-biometric redis",
+    "db:down": "docker compose down",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "prettier": "^3.4.0"
+  },
+  "dependencies": {
+    "lottie-web": "^5.13.0"
+  }
+}

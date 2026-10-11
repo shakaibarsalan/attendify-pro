@@ -1,0 +1,239 @@
+version: '3.8'
+
+# Cap container logs so they can't fill the disk on a long-running host
+# (json-file default is unbounded). Applied to every service below.
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+# ─────────────────────────────────────────────
+#  Attendify — Full Stack Docker Compose
+#  Usage:  docker compose up -d
+#  Dashboard: https://<server-ip>   (HTTPS, camera works)
+#  Landing:   http://<server-ip>:80
+#  API:       https://<server-ip>/api
+#  API Docs:  https://<server-ip>/api-docs
+# ─────────────────────────────────────────────
+
+services:
+
+  # ── Databases ─────────────────────────────
+  db-main:
+    image: postgres:16-alpine
+    container_name: attendify-db-main
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      POSTGRES_DB: attendify
+      POSTGRES_USER: attendify_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+      # Require a password for TCP/host connections; keep the local unix socket on
+      # trust so `docker exec ... psql` (db/migrate.sh) still works without a password.
+      # NOTE: only applies on a FRESH data volume — an already-initialised volume
+      # keeps its existing pg_hba (see SECURITY runbook to flip an existing DB).
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: --auth-local=trust
+    # Bound to localhost only — the DB must NOT be reachable from the LAN. The
+    # server/AI reach it over the internal Docker network; host-local admin still
+    # works via 127.0.0.1:15432 (or an SSH tunnel).
+    ports:
+      - "127.0.0.1:15432:5432"
+    volumes:
+      - db_main_data:/var/lib/postgresql/data
+      - ./db/main/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U attendify_user -d attendify"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  db-biometric:
+    image: pgvector/pgvector:pg16
+    container_name: attendify-db-biometric
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      POSTGRES_DB: attendify_biometric
+      POSTGRES_USER: biometric_user
+      POSTGRES_PASSWORD: ${BIOMETRIC_DB_PASSWORD:?Set BIOMETRIC_DB_PASSWORD in .env}
+      # Biometric templates are sensitive — require a password for host/TCP
+      # connections (local socket stays trust for docker-exec admin/migrations).
+      # Applies on fresh init only; existing volume needs the SECURITY runbook.
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: --auth-local=trust
+    # Localhost-only: the biometric vector store must never be exposed to the LAN.
+    ports:
+      - "127.0.0.1:15433:5432"
+    volumes:
+      - db_biometric_data:/var/lib/postgresql/data
+      - ./db/biometric/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U biometric_user -d attendify_biometric"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis (rate limiting / liveness sessions) ──
+  redis:
+    image: redis:7-alpine
+    container_name: attendify-redis
+    restart: unless-stopped
+    logging: *default-logging
+    command: redis-server --save "" --appendonly no
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Backend API Server ─────────────────────
+  server:
+    build:
+      context: ./server
+    container_name: attendify-server
+    restart: unless-stopped
+    logging: *default-logging
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DB_HOST: db-main
+      DB_PORT: 5432
+      BIOMETRIC_DB_HOST: db-biometric
+      BIOMETRIC_DB_PORT: 5432
+      AI_SERVICE_URL: http://ai-service:8000
+      REDIS_URL: redis://redis:6379
+      # CORS_ORIGIN and FRONTEND_URL come from .env
+    ports:
+      - "5000:5000"
+    depends_on:
+      db-main:
+        condition: service_healthy
+      db-biometric:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  # ── AI / Biometric Service ─────────────────
+  ai-service:
+    build:
+      context: ./ai-service
+    container_name: attendify-ai
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      AI_SERVICE_API_KEY: ${AI_SERVICE_API_KEY:?Set AI_SERVICE_API_KEY in .env}
+      BIOMETRIC_DB_HOST: db-biometric
+      BIOMETRIC_DB_PORT: 5432
+      BIOMETRIC_DB_NAME: attendify_biometric
+      BIOMETRIC_DB_USER: biometric_user
+      BIOMETRIC_DB_PASSWORD: ${BIOMETRIC_DB_PASSWORD:?Set BIOMETRIC_DB_PASSWORD in .env}
+      LIVENESS_HMAC_SECRET: ${LIVENESS_HMAC_SECRET:?Set LIVENESS_HMAC_SECRET in .env}
+      REDIS_URL: redis://redis:6379
+    volumes:
+      - ai_models:/app/models
+    expose:
+      - "8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')\" || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ── Web Dashboard (React SPA) ──────────────
+  # No direct port — accessed via nginx on port 443 (HTTPS)
+  web:
+    build:
+      context: ./apps/web
+    container_name: attendify-web
+    restart: unless-stopped
+    logging: *default-logging
+    expose:
+      - "80"
+    depends_on:
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ── Landing Page ───────────────────────────
+  # No direct port — accessed via nginx on port 80
+  landing:
+    build:
+      context: ./apps/landing
+    container_name: attendify-landing
+    restart: unless-stopped
+    logging: *default-logging
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ── Organizations landing (org.attendify.pro) ──
+  # Separate marketing site for offices/companies. Its OWN nginx serves the static
+  # build and proxies /api to the shared backend (chat assistant + Get-Started
+  # lead form). Reached via the Cloudflare Tunnel on 127.0.0.1:8082. The main site
+  # (attendify.pro) and its nginx are completely unaffected.
+  org-landing:
+    build:
+      context: ./apps/org-landing
+    container_name: attendify-org-landing
+    restart: unless-stopped
+    logging: *default-logging
+    ports:
+      - "127.0.0.1:8082:80"
+    depends_on:
+      - server
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ── Nginx SSL Reverse Proxy ────────────────
+  # Port 80  → landing page
+  # Port 443 → web dashboard (HTTPS, enables camera/getUserMedia)
+  nginx:
+    image: nginx:alpine
+    container_name: attendify-nginx
+    restart: unless-stopped
+    logging: *default-logging
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.ssl.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - web
+      - landing
+      - server
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- --no-check-certificate https://127.0.0.1/ || wget -qO- http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db_main_data:
+  db_biometric_data:
+  ai_models:

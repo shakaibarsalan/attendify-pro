@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap');
+
+/* ── Global modal/overlay layout-shift fix ───────────────────────────────────
+   Every modal / dialog / popup / QR / attendee / confirmation backdrop in the
+   app uses `fixed inset-0`, and most are rendered as a LATER child of a
+   `space-y-*` page wrapper (e.g. <div className="space-y-6">…{modal}</div>).
+   Tailwind's `space-y` applies margin-top to every non-first child — including
+   these fixed overlays — which offsets a position:fixed backdrop ~24px down from
+   the top of the viewport, leaving a white strip above it and making the dialog
+   look shifted down.
+
+   A full-viewport overlay must hug the viewport (top:0 → bottom:0) and never
+   inherit page spacing, so we neutralise any inherited margin. `!important` is
+   required because the `.space-y-* > … ~ …` selector has higher specificity.
+   This is global: it fixes every current AND future modal that follows the
+   standard `fixed inset-0` backdrop convention — no per-component change needed. */
+.fixed.inset-0 {
+  margin: 0 !important;
+}
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1 {
+    @apply text-2xl font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply text-lg font-semibold tracking-tight;
+  }
+
+  h3 {
+    @apply text-base font-semibold;
+  }
+}
+
+@layer components {
+  .sidebar-link {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13.5px] font-medium transition-all duration-150;
+    @apply text-slate-500 hover:bg-slate-100 hover:text-slate-900;
+  }
+  /* Active = a clean brand-navy pill (single accent, on-brand with the logo). */
+  .sidebar-link.active,
+  .sidebar-link.active:hover {
+    background: #23286b;
+    @apply text-white font-semibold;
+    box-shadow: 0 10px 20px -10px rgba(35, 40, 107, 0.55);
+  }
+
+  .card {
+    @apply bg-white rounded-xl border border-gray-200 shadow-sm;
+  }
+
+  .card-header {
+    @apply px-5 py-4 border-b border-gray-200;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-1.5 px-4 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors duration-150 disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150;
+  }
+
+  .input-field {
+    @apply w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow duration-150;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+
+  .badge-green {
+    @apply badge bg-green-50 text-green-700;
+  }
+
+  .badge-red {
+    @apply badge bg-red-50 text-red-700;
+  }
+
+  .badge-yellow {
+    @apply badge bg-yellow-50 text-yellow-700;
+  }
+
+  .badge-blue {
+    @apply badge bg-blue-50 text-blue-700;
+  }
+
+  .stat-card {
+    @apply bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+
+  .table-header {
+    @apply text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3;
+  }
+
+  .table-cell {
+    @apply px-5 py-4 text-sm;
+  }
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; background: #f9fafb;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 40px auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <tr>
+      <td style="background: #4f46e5; padding: 32px; text-align: center;">
+        <h1 style="color: white; margin: 0; font-size: 24px;">Welcome to Attendify</h1>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 32px;">
+        <h2 style="color: #111827; margin: 0 0 16px;">Your Account is Ready</h2>
+        <p style="color: #4b5563; font-size: 16px; line-height: 1.5;">An account has been created for you on Attendify, the smart attendance management system.</p>
+        <table width="100%" cellpadding="8" cellspacing="0" style="background: #f0f0ff; border-radius: 8px; margin: 16px 0;">
+          <tr><td style="color: #3730a3; font-size: 14px;"><strong>Email:</strong> {{EMAIL}}</td></tr>
+          <tr><td style="color: #3730a3; font-size: 14px;"><strong>Temporary Password:</strong> {{TEMP_PASSWORD}}</td></tr>
+        </table>
+        <p style="color: #dc2626; font-size: 14px; font-weight: 600;">Please log in and change your password immediately.</p>
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin: 24px 0;">
+          <tr>
+            <td align="center">
+              <a href="{{LOGIN_URL}}" style="display: inline-block; background: #4f46e5; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">Log In Now</a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -1,0 +1,68 @@
+/* Attendify robot mascot: custom SVG, state-driven cartoon animations */
+
+.mascot { display: inline-block; line-height: 0; }
+.svg { display: block; overflow: visible; width: 100%; height: 100%; }
+
+/* Brand palette (deep purple / indigo, cream head, cyan eyes) */
+.head { fill: #eef2ff; stroke: #4f46e5; stroke-width: 2.6; }
+.face { fill: #312e81; }
+.ear { fill: #a5b4fc; }
+.stem { stroke: #4f46e5; stroke-width: 2.4; stroke-linecap: round; }
+.tip { fill: #22d3ee; }
+.eye { fill: #22d3ee; }
+.mouth { fill: none; stroke: #4f46e5; stroke-width: 2; stroke-linecap: round; }
+.mOpen { fill: #312e81; stroke: none; }
+.tdot { fill: #4f46e5; }
+.wave { fill: none; stroke: #818cf8; stroke-width: 2.2; stroke-linecap: round; }
+
+/* Each animated part transforms around its own centre. */
+.bot, .eye, .tip, .tdot, .wave { transform-box: fill-box; transform-origin: center; }
+.eye { filter: drop-shadow(0 0 1.5px rgba(34, 211, 238, 0.4)); }
+
+/* Mouths + extras hidden by default; the active state reveals the right one. */
+.mouth { opacity: 0; }
+.thinkDots, .waves { opacity: 0; }
+
+/* ── STATE: idle ───────────────────────────────────────────────────────── */
+.svg[data-state='idle'] .bot { animation: mBob 3s ease-in-out infinite; }
+.svg[data-state='idle'] .eye { animation: mBlink 3.6s infinite; }
+.svg[data-state='idle'] .tip { animation: mTip 2s ease-in-out infinite; }
+.svg[data-state='idle'] .mSmile { opacity: 1; }
+
+/* ── STATE: listening ──────────────────────────────────────────────────── */
+.svg[data-state='listening'] .eye { transform: scale(1.12); filter: drop-shadow(0 0 3px #5eead4); }
+.svg[data-state='listening'] .tip { animation: mTip 1s ease-in-out infinite; }
+.svg[data-state='listening'] .mOpen { opacity: 1; }
+.svg[data-state='listening'] .waves { opacity: 1; }
+.svg[data-state='listening'] .wave { transform-origin: left center; animation: mWave 1.6s ease-out infinite; }
+.svg[data-state='listening'] .wave:nth-child(2) { animation-delay: 0.25s; }
+.svg[data-state='listening'] .wave:nth-child(3) { animation-delay: 0.5s; }
+
+/* ── STATE: typing (AI responding) ─────────────────────────────────────── */
+.svg[data-state='typing'] .eye { transform: scaleY(0.65); }
+.svg[data-state='typing'] .antenna { transform-box: view-box; transform-origin: 40px 16px; animation: mSpin 2s linear infinite; }
+.svg[data-state='typing'] .mStraight { opacity: 1; }
+.svg[data-state='typing'] .thinkDots { opacity: 1; }
+.svg[data-state='typing'] .tdot { animation: mTdot 1.2s ease-in-out infinite; }
+.svg[data-state='typing'] .tdot:nth-child(2) { animation-delay: 0.15s; }
+.svg[data-state='typing'] .tdot:nth-child(3) { animation-delay: 0.3s; }
+
+/* ── STATE: user_typing ────────────────────────────────────────────────── */
+.svg[data-state='user_typing'] .bot { animation: mWiggle 0.4s ease-in-out 3; }
+.svg[data-state='user_typing'] .eye { transform: translateY(-1px); }
+.svg[data-state='user_typing'] .mWide { opacity: 1; }
+
+/* ── STATE: static (frozen avatar) ─────────────────────────────────────── */
+.svg[data-state='static'] .mSmile { opacity: 1; }
+
+@keyframes mBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes mBlink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+@keyframes mTip { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.65; } }
+@keyframes mSpin { to { transform: rotate(360deg); } }
+@keyframes mTdot { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+@keyframes mWave { 0% { opacity: 0; transform: scale(0.5); } 40% { opacity: 0.9; } 100% { opacity: 0; transform: scale(1.15); } }
+@keyframes mWiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-2.5deg); } 75% { transform: rotate(2.5deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .svg * { animation: none !important; }
+}

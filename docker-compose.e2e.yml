@@ -1,0 +1,33 @@
+# Ephemeral end-to-end proxy harness (CI only — never runs on the prod VM).
+#
+# Brings up the REAL web container (its nginx + built SPA) in front of a tiny mock
+# backend, so we can test the web -> server proxy chain — and specifically that it
+# SURVIVES a backend container being recreated with a new IP. That recreate is the
+# exact scenario that caused the 2.2b production outage (web nginx pinned to a
+# stale upstream IP). This harness lets us verify any proxy change here first.
+name: attendify-e2e
+
+services:
+  # Mock backend: responds 200 to every path on :5000, like the real server would
+  # for the proxy's purposes. Named `server` so the web nginx (proxy_pass to
+  # http://server:5000) resolves it via docker DNS exactly as in production.
+  server:
+    image: hashicorp/http-echo:latest
+    command: ["-listen=:5000", "-text=mock-backend-ok"]
+
+  # Mock landing. The web nginx has a literal `proxy_pass http://landing:80` in its
+  # @landing fallback; nginx resolves ALL literal upstreams at startup, so `landing`
+  # must exist or nginx won't start.
+  landing:
+    image: hashicorp/http-echo:latest
+    command: ["-listen=:80", "-text=mock-landing"]
+
+  # The REAL web image (apps/web/Dockerfile) — same nginx config as production.
+  web:
+    build:
+      context: ./apps/web
+    depends_on:
+      - server
+      - landing
+    ports:
+      - "8090:80"

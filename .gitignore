@@ -1,0 +1,61 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+.env.*.local
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+
+# AI Models (large files)
+ai-service/models/*.onnx
+ai-service/models/*.pth
+ai-service/models/*.pkl
+ai-service/models/models/
+!ai-service/models/.gitkeep
+
+# TLS certs / keys (locally generated, never commit)
+nginx/certs/
+
+# Claude Code local settings (may contain tokens)
+.claude/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database dumps / backups (never commit — contain biometric data)
+*.sql.gz
+*.dump
+*.dump.gz
+*.dump.enc
+/backups/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Keys & certificates (never commit)
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local test output
+e2e/screenshots/
+e2e/test-results/

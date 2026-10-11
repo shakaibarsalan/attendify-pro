@@ -1,0 +1,26 @@
+.wordmark {
+  display: flex;
+  align-items: baseline;
+  user-select: none;
+  overflow: visible;
+}
+
+.charWrap {
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+}
+
+.letter {
+  display: inline-block;
+}
+
+.check {
+  position: absolute;
+  left: 50%;
+  top: -0.30em;
+  transform: translateX(-50%);
+  pointer-events: none;
+  line-height: 0;
+}
+.checkInner { display: inline-block; line-height: 0; }
