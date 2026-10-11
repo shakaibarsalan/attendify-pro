@@ -99,8 +99,8 @@ flowchart LR
 You need Docker with Compose and OpenSSL.
 
 ```bash
-git clone https://github.com/shakaibarsalan/attendify.git
-cd attendify
+git clone https://github.com/shakaibarsalan/attendify-pro.git
+cd attendify-pro
 
 # 1. Configure: copy the template, then replace every <...> placeholder
 cp .env.example .env
