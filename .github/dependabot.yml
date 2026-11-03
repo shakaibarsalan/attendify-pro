@@ -1,0 +1,36 @@
+# Weekly, grouped dependency updates, so updates arrive as a few PRs instead of
+# one per package. Security fixes are grouped too.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directories:
+      - "/"
+      - "/server"
+      - "/apps/web"
+      - "/apps/landing"
+      - "/apps/org-landing"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      npm-security:
+        applies-to: security-updates
+        patterns: ["*"]
+      npm-minor-and-patch:
+        applies-to: version-updates
+        update-types: [minor, patch]
+
+  - package-ecosystem: pip
+    directory: "/ai-service"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    groups:
+      pip-security:
+        applies-to: security-updates
+        patterns: ["*"]
+      pip-minor-and-patch:
+        applies-to: version-updates
+        update-types: [minor, patch]
