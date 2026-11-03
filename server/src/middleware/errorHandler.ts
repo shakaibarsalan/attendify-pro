@@ -5,7 +5,7 @@ export function errorHandler(err: any, req: Request, res: Response, _next: NextF
   const reqId = (req as any).requestId;
 
   // Always log the full error server-side (with request id for correlation).
-  console.error(`[error] ${req.method} ${req.path} -> ${status}${reqId ? ` [${reqId}]` : ''}:`, err);
+  console.error('[error] %s %s -> %s%s:', req.method, req.path, status, reqId ? ` [${reqId}]` : '', err);
 
   // 4xx are intentional/expected — surface their message. 5xx may carry internal
   // details (stack frames, DB errors) — return a generic message in production to

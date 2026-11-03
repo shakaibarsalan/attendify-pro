@@ -6,12 +6,13 @@ import { query, withTransaction } from '../../config/database.js';
 import { config } from '../../config/index.js';
 import { generateStrongPassword } from '../../utils/password.js';
 import { emailService } from '../../services/email.js';
+import { stripTrailingSlashes } from '../../utils/validation.js';
 
 const router = Router();
 
 // Normalize an email domain: strip protocol / leading @ / trailing slash, lowercase.
 function normalizeDomain(d?: string | null): string {
-  return (d || '').trim().toLowerCase().replace(/^https?:\/\//, '').replace(/^@/, '').replace(/\/+$/, '');
+  return stripTrailingSlashes((d || '').trim().toLowerCase().replace(/^https?:\/\//, '').replace(/^@/, ''));
 }
 
 /**

@@ -8,6 +8,7 @@ import { authenticate, requireRoles, AuthRequest } from '../../middleware/auth.j
 import { getRedis } from '../../config/redis.js';
 import crypto from 'node:crypto';
 import { emailService } from '../../services/email.js';
+import { EMAIL_RE } from '../../utils/validation.js';
 
 const router = Router();
 
@@ -437,7 +438,6 @@ const bulkRegisterSchema = z.object({
   })).min(1).max(1000),
 });
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
  * @openapi

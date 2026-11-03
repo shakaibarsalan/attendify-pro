@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { authenticate, requireRoles, AuthRequest } from '../../middleware/auth.js';
 import { query, withTransaction, biometricPool } from '../../config/database.js';
 import { generateStrongPassword } from '../../utils/password.js';
+import { stripTrailingSlashes } from '../../utils/validation.js';
 
 const router = Router();
 
@@ -11,7 +12,7 @@ const router = Router();
 // and "@umt.edu.pk" both normalize to "umt.edu.pk".
 function normalizeDomain(d?: string | null): string | null {
   if (!d) return null;
-  const s = String(d).trim().toLowerCase().replace(/^https?:\/\//, '').replace(/^@/, '').replace(/\/+$/, '');
+  const s = stripTrailingSlashes(String(d).trim().toLowerCase().replace(/^https?:\/\//, '').replace(/^@/, ''));
   return s || null;
 }
 

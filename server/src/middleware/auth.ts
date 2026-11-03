@@ -117,7 +117,10 @@ export function apiKeyAuth(req: AuthRequest, res: Response, next: NextFunction) 
       return res.status(401).json({ error: 'Invalid API key' });
     }
     const key = result.rows[0];
-    if (key.key_hash !== keyHash) {
+    // Constant-time comparison, so response timing doesn't leak how much of the hash matched.
+    const stored = Buffer.from(String(key.key_hash ?? ''), 'hex');
+    const given = Buffer.from(keyHash, 'hex');
+    if (stored.length !== given.length || !crypto.timingSafeEqual(stored, given)) {
       return res.status(401).json({ error: 'Invalid API key' });
     }
     // API access can be revoked at the organization level (system admin disables

@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { authenticate, requireRoles, AuthRequest } from '../../middleware/auth.js';
 import { query } from '../../config/database.js';
+import { EMAIL_RE } from '../../utils/validation.js';
 
 const router = Router();
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const REGNO_RE = /^[FS][A-Z0-9]{10}$/;
 
 /**
