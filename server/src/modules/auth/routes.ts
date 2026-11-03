@@ -109,7 +109,7 @@ const registerSchema = z.object({
 // Turn a Zod validation failure into ONE clear, human-readable message for the
 // UI (instead of a generic "Validation error" the admin can't act on).
 function zodErrorMessage(err: z.ZodError): string {
-  const issue = err.errors[0];
+  const issue = err.issues[0];
   const field = String(issue?.path?.[0] || '');
   switch (field) {
     case 'email': return 'Please enter a valid organization email — letters, numbers and dots only, no spaces.';
@@ -414,7 +414,7 @@ router.post('/register', authenticate, requireRoles('system_admin', 'org_admin')
     });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: zodErrorMessage(error), details: error.errors });
+      return res.status(400).json({ error: zodErrorMessage(error), details: error.issues });
     }
     res.status(500).json({ error: 'Failed to create user' });
   }
@@ -559,7 +559,7 @@ router.post('/register/bulk', authenticate, requireRoles('system_admin', 'org_ad
     });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation error', details: error.errors });
+      return res.status(400).json({ error: 'Validation error', details: error.issues });
     }
     res.status(500).json({ error: 'Failed to import users' });
   }
@@ -733,7 +733,7 @@ router.post('/login', async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation error', details: error.errors });
+      return res.status(400).json({ error: 'Validation error', details: error.issues });
     }
     res.status(500).json({ error: 'Login failed' });
   }
@@ -905,7 +905,7 @@ router.post('/change-password', authenticate, async (req: AuthRequest, res: Resp
     if (error instanceof z.ZodError) {
       // Surface the specific rule (e.g. "must contain at least one uppercase letter")
       // instead of a generic message, so the client can show it directly.
-      return res.status(400).json({ error: error.errors[0]?.message || 'Validation error', details: error.errors });
+      return res.status(400).json({ error: error.issues[0]?.message || 'Validation error', details: error.issues });
     }
     res.status(500).json({ error: 'Failed to change password' });
   }
@@ -1268,7 +1268,7 @@ router.post('/reset-password', async (req: Request, res: Response) => {
     res.json({ message: 'Password reset successfully' });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation error', details: error.errors });
+      return res.status(400).json({ error: 'Validation error', details: error.issues });
     }
     res.status(500).json({ error: 'Failed to reset password' });
   }
@@ -1354,7 +1354,7 @@ router.put('/profile', authenticate, async (req: AuthRequest, res) => {
     res.json(result.rows[0]);
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: error.errors[0]?.message || 'Validation error', details: error.errors });
+      return res.status(400).json({ error: error.issues[0]?.message || 'Validation error', details: error.issues });
     }
     res.status(500).json({ error: 'Failed to update profile' });
   }

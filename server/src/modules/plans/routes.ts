@@ -228,7 +228,7 @@ router.post('/select', authenticate, requireRoles('org_admin'), async (req: Auth
     res.json({ plan, message: 'Plan selected' });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation error', details: error.errors });
+      return res.status(400).json({ error: 'Validation error', details: error.issues });
     }
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -282,7 +282,7 @@ router.put('/:id', authenticate, requireRoles('system_admin'), async (req: AuthR
     res.json({ plan: result.rows[0], message: 'Plan updated' });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation error', details: error.errors });
+      return res.status(400).json({ error: 'Validation error', details: error.issues });
     }
     res.status(500).json({ error: 'Failed to update plan' });
   }

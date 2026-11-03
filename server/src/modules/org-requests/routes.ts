@@ -261,7 +261,7 @@ router.post('/', async (req, res: Response) => {
     if (error instanceof z.ZodError) {
       // Turn the raw Zod issue into a specific, actionable message the visitor
       // can fix (instead of an opaque "Validation error").
-      const first = error.errors[0];
+      const first = error.issues[0];
       const field = first?.path?.join('.') || 'input';
       const friendly: Record<string, string> = {
         organizationName: 'Please enter your organization name (at least 2 characters).',
@@ -271,7 +271,7 @@ router.post('/', async (req, res: Response) => {
       const message =
         friendly[field] ||
         (first?.message ? `${field}: ${first.message}` : 'Please check the form and try again.');
-      return res.status(400).json({ error: message, details: error.errors });
+      return res.status(400).json({ error: message, details: error.issues });
     }
     res.status(500).json({ error: 'Failed to submit request' });
   }
@@ -514,7 +514,7 @@ router.patch('/:id/approve', authenticate, requireRoles('system_admin'), async (
     res.json({ institution, adminEmail: loginEmail, personalEmail, tempPassword, message: 'Approved' });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation error', details: error.errors });
+      return res.status(400).json({ error: 'Validation error', details: error.issues });
     }
     if (error.code === '23505') {
       return res.status(409).json({ error: 'A unique value (institution code, admin email, or email domain) is already taken. Adjust the details and try again.' });
@@ -589,7 +589,7 @@ router.patch('/:id/reject', authenticate, requireRoles('system_admin'), async (r
     res.json({ message: 'Rejected' });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation error', details: error.errors });
+      return res.status(400).json({ error: 'Validation error', details: error.issues });
     }
     res.status(500).json({ error: 'Failed to reject request' });
   }

@@ -337,7 +337,7 @@ router.post('/', authenticate, requireRoles('system_admin'), async (req: AuthReq
     res.status(201).json({ institution, adminEmail, tempPassword, message: 'Institution created with admin account' });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation error', details: error.errors });
+      return res.status(400).json({ error: 'Validation error', details: error.issues });
     }
     if (error.code === '23505') {
       return res.status(409).json({ error: 'A unique value (institution code, admin email, or email domain) is already taken.' });
@@ -721,7 +721,7 @@ router.patch('/:id/plan', authenticate, requireRoles('system_admin'), async (req
     res.json({ institution: result.rows[0], message: `Plan "${p.name}" assigned` });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation error', details: error.errors });
+      return res.status(400).json({ error: 'Validation error', details: error.issues });
     }
     res.status(500).json({ error: 'Failed to assign plan' });
   }
@@ -848,7 +848,7 @@ router.patch('/:id/api-access', authenticate, requireRoles('system_admin'), asyn
     } catch (e) { console.error('[api-access] notify org failed:', e); }
     res.json({ institution: result.rows[0], message: `API access ${enabled ? 'enabled' : 'disabled'}` });
   } catch (error: any) {
-    if (error instanceof z.ZodError) return res.status(400).json({ error: 'Validation error', details: error.errors });
+    if (error instanceof z.ZodError) return res.status(400).json({ error: 'Validation error', details: error.issues });
     res.status(500).json({ error: 'Failed to update API access' });
   }
 });

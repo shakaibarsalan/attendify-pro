@@ -79,7 +79,7 @@ router.post('/', authenticate, requireRoles('student', 'teacher'), async (req: A
     );
     res.status(201).json({ id: r.rows[0].id, message: 'Query submitted' });
   } catch (e: any) {
-    if (e instanceof z.ZodError) return res.status(400).json({ error: 'Validation error', details: e.errors });
+    if (e instanceof z.ZodError) return res.status(400).json({ error: 'Validation error', details: e.issues });
     console.error('create query error:', e);
     res.status(500).json({ error: 'Failed to submit query' });
   }
@@ -156,7 +156,7 @@ router.patch('/:id', authenticate, requireRoles('org_admin', 'system_admin'), as
     await query(`UPDATE support_queries SET ${sets.join(', ')} WHERE id = $${params.length}`, params);
     res.json({ message: 'Updated' });
   } catch (e: any) {
-    if (e instanceof z.ZodError) return res.status(400).json({ error: 'Validation error', details: e.errors });
+    if (e instanceof z.ZodError) return res.status(400).json({ error: 'Validation error', details: e.issues });
     console.error('update query error:', e);
     res.status(500).json({ error: 'Failed to update query' });
   }
