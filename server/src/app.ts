@@ -7,6 +7,7 @@ import { config } from './config/index.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { idempotency } from './middleware/idempotency.js';
 import { auditLog } from './middleware/audit.js';
+import { apiRateLimit } from './middleware/apiRateLimit.js';
 import { authRouter } from './modules/auth/routes.js';
 import { userRouter } from './modules/users/routes.js';
 import { institutionRouter } from './modules/institutions/routes.js';
@@ -181,6 +182,8 @@ ai_service_latency_ms_count ${latencies.length}
 
 setupSwagger(app);
 
+// Rate-limit every API route before any work (audit, idempotency, DB) is done.
+app.use('/api', apiRateLimit);
 app.use(idempotency);
 app.use(auditLog);
 
