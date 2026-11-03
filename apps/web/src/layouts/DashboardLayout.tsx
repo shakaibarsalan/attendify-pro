@@ -151,7 +151,7 @@ export function DashboardLayout() {
                 key={item.path}
                 to={item.path}
                 end={item.path === basePath}
-                className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+                className={({ isActive }: { isActive: boolean }) => `sidebar-link ${isActive ? 'active' : ''}`}
               >
                 {item.icon}
                 <span>{item.label}</span>
