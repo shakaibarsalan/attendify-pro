@@ -55,3 +55,13 @@ export const apiRateLimit = rateLimit({
   legacyHeaders: false,
   message: { error: 'Too many requests. Please wait a minute and try again.' },
 });
+
+/** The readiness check queries both databases, so it gets its own small per-IP limit.
+ *  Docker's health check uses /health, which stays unlimited. */
+export const readinessRateLimit = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests' },
+});

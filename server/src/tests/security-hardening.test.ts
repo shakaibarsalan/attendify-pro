@@ -3,7 +3,7 @@ import express from 'express';
 import request from 'supertest';
 import jwt from 'jsonwebtoken';
 import { EMAIL_RE, stripTrailingSlashes } from '../utils/validation.js';
-import { apiRateLimit, apiRateLimitKey } from '../middleware/apiRateLimit.js';
+import { apiRateLimit, apiRateLimitKey, readinessRateLimit } from '../middleware/apiRateLimit.js';
 import { errorHandler } from '../middleware/errorHandler.js';
 
 const SECRET = process.env.JWT_SECRET as string;
@@ -71,6 +71,16 @@ describe('apiRateLimit', () => {
     const token = jwt.sign({ id: 'user-7' }, SECRET);
     const res = await request(app).get('/api/ping').set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
+  });
+});
+
+describe('readinessRateLimit', () => {
+  it('caps the readiness check at 60 requests a minute per IP', async () => {
+    const app = express();
+    app.get('/health/ready', readinessRateLimit, (_req, res) => res.json({ ok: true }));
+    let last = 200;
+    for (let i = 0; i < 61; i++) last = (await request(app).get('/health/ready')).status;
+    expect(last).toBe(429);
   });
 });
 

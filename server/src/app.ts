@@ -7,7 +7,7 @@ import { config } from './config/index.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { idempotency } from './middleware/idempotency.js';
 import { auditLog } from './middleware/audit.js';
-import { apiRateLimit } from './middleware/apiRateLimit.js';
+import { apiRateLimit, readinessRateLimit } from './middleware/apiRateLimit.js';
 import { authRouter } from './modules/auth/routes.js';
 import { userRouter } from './modules/users/routes.js';
 import { institutionRouter } from './modules/institutions/routes.js';
@@ -98,7 +98,7 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString(), service: 'attendify-api' });
 });
 
-app.get('/health/ready', async (_req, res) => {
+app.get('/health/ready', readinessRateLimit, async (_req, res) => {
   const checks: Record<string, string> = {};
   let allOk = true;
 
