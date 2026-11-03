@@ -21,16 +21,15 @@ updates:
         applies-to: version-updates
         update-types: [minor, patch]
 
+  # The AI service pins its ML stack (numpy, onnxruntime, OpenCV) on purpose, so
+  # Python gets security fixes only: a limit of 0 turns routine version bumps off.
   - package-ecosystem: pip
     directory: "/ai-service"
     schedule:
       interval: weekly
       day: monday
-    open-pull-requests-limit: 3
+    open-pull-requests-limit: 0
     groups:
       pip-security:
         applies-to: security-updates
         patterns: ["*"]
-      pip-minor-and-patch:
-        applies-to: version-updates
-        update-types: [minor, patch]
