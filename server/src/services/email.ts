@@ -70,7 +70,7 @@ async function sendFraudAlertToOrgAdmin(to: string, alert: { type: string; messa
 }
 
 async function sendWelcome(to: string, loginEmail: string, tempPassword: string): Promise<boolean> {
-  const loginUrl = (process.env.FRONTEND_URL || 'https://attendify.pro').replace(/\/$/, '') + '/login';
+  const loginUrl = (process.env.FRONTEND_URL || 'https://attendify.cc').replace(/\/$/, '') + '/login';
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="background: #4F46E5; padding: 20px; border-radius: 8px 8px 0 0;">

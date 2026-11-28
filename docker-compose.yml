@@ -188,11 +188,11 @@ services:
       timeout: 5s
       retries: 3
 
-  # ── Organizations landing (org.attendify.pro) ──
+  # ── Organizations landing (org.attendify.cc) ──
   # Separate marketing site for offices/companies. Its OWN nginx serves the static
   # build and proxies /api to the shared backend (chat assistant + Get-Started
   # lead form). Reached via the Cloudflare Tunnel on 127.0.0.1:8082. The main site
-  # (attendify.pro) and its nginx are completely unaffected.
+  # (attendify.cc) and its nginx are completely unaffected.
   org-landing:
     build:
       context: ./apps/org-landing

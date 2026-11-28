@@ -7,7 +7,7 @@ const contactInfo = [
   {
     icon: Mail,
     label: 'Email us',
-    value: 'info@attendify.pro',
+    value: 'info@attendify.cc',
   },
   {
     icon: Phone,

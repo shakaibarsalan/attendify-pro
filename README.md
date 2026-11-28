@@ -4,7 +4,7 @@ Attendance that checks who is actually in the room, using face and fingerprint s
 
 ![Attendify landing page](docs/images/hero.png)
 
-**Live:** [attendify.pro](https://attendify.pro) (universities) · [org.attendify.pro](https://org.attendify.pro) (workplaces)
+**Live:** [attendify.cc](https://attendify.cc) (universities) · [org.attendify.cc](https://org.attendify.cc) (workplaces)
 
 ## What it does
 
@@ -48,7 +48,7 @@ Six independent checks. Teachers choose which ones a session requires.
 | | |
 |---|---|
 | ![Workplace landing page](docs/images/workplace-hero.png) | ![Feature list with contactless fingerprint](docs/images/features.png) |
-| Workplace edition at org.attendify.pro | Face, contactless fingerprint and QR, all from a phone |
+| Workplace edition at org.attendify.cc | Face, contactless fingerprint and QR, all from a phone |
 | ![How it works](docs/images/how-it-works.png) | ![Pricing](docs/images/pricing.png) |
 | Four steps from sign-up to first session | Plans for universities |
 | ![Role-based login](docs/images/login.png) | |
@@ -183,8 +183,8 @@ Generate secrets with `openssl rand -hex 32`. Never commit `.env`.
 attendify/
 ├── apps/
 │   ├── web/                 React dashboard: admin, teacher and student views, face/fingerprint/QR capture
-│   ├── landing/             attendify.pro marketing site
-│   └── org-landing/         org.attendify.pro marketing site (workplaces)
+│   ├── landing/             attendify.cc marketing site
+│   └── org-landing/         org.attendify.cc marketing site (workplaces)
 ├── server/                  Express + TypeScript API
 │   ├── src/modules/         21 feature modules: auth, attendance, sessions, biometric, fraud,
 │   │                        reports, public-api, webhooks, org-requests, chat, ...
@@ -222,7 +222,7 @@ Integration and end-to-end tests run against a seeded database. They read the de
 
 ## Author
 
-Built by **Muhammad Shakaib Arsalan**. Attendify started as my final-year project for my BS in Computer Science, and I kept building it into the live product at [attendify.pro](https://attendify.pro).
+Built by **Muhammad Shakaib Arsalan**. Attendify started as my final-year project for my BS in Computer Science, and I kept building it into the live product at [attendify.cc](https://attendify.cc).
 
 [Portfolio](https://shakaib.vercel.app) · [LinkedIn](https://www.linkedin.com/in/shakaib-arsalan) · [GitHub](https://github.com/shakaibarsalan)
 

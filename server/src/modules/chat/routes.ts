@@ -44,7 +44,7 @@ const SYSTEM_PROMPT =
   `use commas, periods, or simpler wording instead.\n\n` +
   `ATTENDIFY KNOWLEDGE:\n${KNOWLEDGE_TEXT}`;
 
-// ── Organizations / workplace variant (org.attendify.pro) ─────────────────────
+// ── Organizations / workplace variant (org.attendify.cc) ─────────────────────
 // Same product, framed for offices, companies, and teams instead of universities.
 // Selected when the request body carries audience === 'organization'.
 const ORG_KNOWLEDGE_TEXT =

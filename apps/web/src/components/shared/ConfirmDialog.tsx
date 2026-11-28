@@ -11,7 +11,7 @@ export interface ConfirmState {
 
 /**
  * Branded, accessible confirmation dialog — a drop-in replacement for the native
- * window.confirm() (which renders an ugly "attendify.pro says…" browser popup).
+ * window.confirm() (which renders an ugly "attendify.cc says…" browser popup).
  * The parent holds a `ConfirmState | null` and passes it in; null hides it.
  */
 export default function ConfirmDialog({ state, onClose }: { state: ConfirmState | null; onClose: () => void }) {

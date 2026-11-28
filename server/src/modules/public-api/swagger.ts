@@ -13,7 +13,7 @@ const options = {
       contact: { name: 'Attendify Team' },
     },
     servers: [
-      { url: 'https://attendify.pro/api', description: 'Production' },
+      { url: 'https://attendify.cc/api', description: 'Production' },
       { url: 'http://localhost:5000/api', description: 'Development' },
     ],
     tags: [

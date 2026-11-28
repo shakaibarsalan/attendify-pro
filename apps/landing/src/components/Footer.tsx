@@ -29,11 +29,11 @@ export default function Footer() {
               AI-powered attendance tracking for modern universities.
             </p>
             <a
-              href="mailto:info@attendify.pro"
+              href="mailto:info@attendify.cc"
               className={styles.footerLink}
               style={{ display: 'inline-block', marginTop: 12, fontWeight: 600 }}
             >
-              info@attendify.pro
+              info@attendify.cc
             </a>
           </div>
 

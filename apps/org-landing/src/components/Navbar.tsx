@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import styles from './Navbar.module.css';
 import AttendifyWordmark from './AttendifyWordmark';
 
-// The app/dashboard lives on the main domain; org.attendify.pro is marketing only.
-const appUrl = `https://attendify.pro/login/org-admin`;
+// The app/dashboard lives on the main domain; org.attendify.cc is marketing only.
+const appUrl = `https://attendify.cc/login/org-admin`;
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);

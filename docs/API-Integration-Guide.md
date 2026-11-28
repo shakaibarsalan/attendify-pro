@@ -6,7 +6,7 @@ products — **Data Integration** and **Biometric Verification** — usage limit
 and copy-paste examples.
 
 > The always-current machine-readable contract is the OpenAPI/Swagger doc at
-> **`https://attendify.pro/api/integration-docs`**.
+> **`https://attendify.cc/api/integration-docs`**.
 
 ---
 
@@ -32,13 +32,13 @@ access (or revoking the key) blocks it immediately.
 Send your key in the `X-API-Key` header on every request.
 
 ```
-Base URL:  https://attendify.pro/api
+Base URL:  https://attendify.cc/api
 Header:    X-API-Key: ak_xxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 ```bash
 curl -H "X-API-Key: $ATTENDIFY_KEY" \
-  https://attendify.pro/api/public/courses
+  https://attendify.cc/api/public/courses
 ```
 
 All data is scoped to **your institution** — a key can never read another
@@ -64,14 +64,14 @@ Pull attendance data into your ERP. Typical sync flow:
 
 ```bash
 # 1. find the Attendify course id for your code "CS-101"
-curl -H "X-API-Key: $KEY" "https://attendify.pro/api/public/courses?code=CS-101"
+curl -H "X-API-Key: $KEY" "https://attendify.cc/api/public/courses?code=CS-101"
 # -> [{ "id": "c1000000-...", "code": "CS-101", "name": "...", "teacher_name": "..." }]
 
 # 2. list that course's sessions (paginated, newest first)
-curl -H "X-API-Key: $KEY" "https://attendify.pro/api/public/sessions/course/c1000000-...?limit=20"
+curl -H "X-API-Key: $KEY" "https://attendify.cc/api/public/sessions/course/c1000000-...?limit=20"
 
 # 3. pull attendance for a session
-curl -H "X-API-Key: $KEY" "https://attendify.pro/api/public/attendance/session/<sessionId>"
+curl -H "X-API-Key: $KEY" "https://attendify.cc/api/public/attendance/session/<sessionId>"
 ```
 
 Use `updatedSince` (ISO timestamp) and `from`/`to` (YYYY-MM-DD) for incremental
@@ -109,19 +109,19 @@ Attendify's attendance students. **Requires a key with the `biometric` scope.**
 
 ```bash
 # enroll (image = base64 JPEG/PNG, optionally a data: URI)
-curl -X POST https://attendify.pro/api/public/biometric/face/enroll \
+curl -X POST https://attendify.cc/api/public/biometric/face/enroll \
   -H "X-API-Key: $KEY" -H "Content-Type: application/json" \
   -d '{ "subjectRef": "employee-4821", "image": "data:image/jpeg;base64,/9j/4AAQ..." }'
 # -> { "success": true, "subjectRef": "employee-4821", "embeddingId": "...", "qualityScore": ... }
 
 # verify 1:1
-curl -X POST https://attendify.pro/api/public/biometric/face/verify \
+curl -X POST https://attendify.cc/api/public/biometric/face/verify \
   -H "X-API-Key: $KEY" -H "Content-Type: application/json" \
   -d '{ "subjectRef": "employee-4821", "image": "data:image/jpeg;base64,..." }'
 # -> { "match": true, "confidence": 0.97, "threshold": 0.55, "subjectRef": "employee-4821" }
 
 # identify 1:N
-curl -X POST https://attendify.pro/api/public/biometric/face/identify \
+curl -X POST https://attendify.cc/api/public/biometric/face/identify \
   -H "X-API-Key: $KEY" -H "Content-Type: application/json" \
   -d '{ "image": "data:image/jpeg;base64,..." }'
 # -> { "match": true, "subjectRef": "employee-4821", "confidence": 0.97, "candidates": [...] }
@@ -204,10 +204,10 @@ Error responses are JSON: `{ "error": "human-readable message" }`.
 
 ```
 Auth header     X-API-Key: <key>
-Base URL        https://attendify.pro/api
+Base URL        https://attendify.cc/api
 Pagination      ?page=1&limit=50   (limit max 200)
 Incremental     ?updatedSince=<ISO>  ·  ?from=YYYY-MM-DD&to=YYYY-MM-DD
 Biometric scope required for /public/biometric/*  (create key with biometric enabled)
 Free ops        enroll, status, delete   ·   Billable: verify, identify
-Full reference  https://attendify.pro/api/integration-docs
+Full reference  https://attendify.cc/api/integration-docs
 ```

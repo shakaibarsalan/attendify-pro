@@ -242,7 +242,7 @@ export default function RoleLoginSplit({ role, demo = false }: { role: PortalRol
                   );
                 })}
               </div>
-              <div className="font-mono text-[11.5px] text-slate-300 mt-4 tracking-wide">attendify.pro{toPath(cfg.route)}</div>
+              <div className="font-mono text-[11.5px] text-slate-300 mt-4 tracking-wide">attendify.cc{toPath(cfg.route)}</div>
             </div>
           </div>
         </div>

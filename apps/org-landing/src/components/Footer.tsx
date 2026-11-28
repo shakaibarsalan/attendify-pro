@@ -11,9 +11,9 @@ const quickLinks = [
 ];
 
 const legalLinks = [
-  { label: 'Documentation', href: 'https://attendify.pro/docs' },
-  { label: 'Privacy Policy', href: 'https://attendify.pro/privacy' },
-  { label: 'Terms of Service', href: 'https://attendify.pro/terms' },
+  { label: 'Documentation', href: 'https://attendify.cc/docs' },
+  { label: 'Privacy Policy', href: 'https://attendify.cc/privacy' },
+  { label: 'Terms of Service', href: 'https://attendify.cc/terms' },
 ];
 
 export default function Footer() {
@@ -29,11 +29,11 @@ export default function Footer() {
               AI-powered attendance for modern workplaces and teams.
             </p>
             <a
-              href="mailto:info@attendify.pro"
+              href="mailto:info@attendify.cc"
               className={styles.footerLink}
               style={{ display: 'inline-block', marginTop: 12, fontWeight: 600 }}
             >
-              info@attendify.pro
+              info@attendify.cc
             </a>
           </div>
 

@@ -2,7 +2,7 @@ import { useEffect, useState, type CSSProperties } from 'react';
 import styles from './Hero.module.css';
 
 // The app (dashboard/login) lives on the main domain; the org site is marketing only.
-const appUrl = () => 'https://attendify.pro/login/org-admin';
+const appUrl = () => 'https://attendify.cc/login/org-admin';
 
 const headlineWords = ['Track', 'Every', 'Employee.', 'Zero', 'Hardware', 'Required.'];
 const marqueeStats = ['No Hardware to Buy', '<2s Face Recognition', 'Face + Fingerprint on any Phone', 'Automated Records & Reports'];

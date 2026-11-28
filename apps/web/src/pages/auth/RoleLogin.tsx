@@ -326,7 +326,7 @@ export default function RoleLogin({ role, demo = false }: { role: PortalRole; de
                   );
                 })}
               </div>
-              <div className="font-mono text-[11.5px] text-gray-300 mt-4 tracking-wide">attendify.pro{toPath(cfg.route)}</div>
+              <div className="font-mono text-[11.5px] text-gray-300 mt-4 tracking-wide">attendify.cc{toPath(cfg.route)}</div>
             </div>
           </div>
       </motion.div>
